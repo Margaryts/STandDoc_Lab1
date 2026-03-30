@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/game/HangmanDrawing.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/game/HangmanDrawing.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Компонент візуалізації шибениці за допомогою SVG.
+ * Динамічно відображає частини тіла персонажа залежно від кількості помилкових спроб.
+ * * @component
+ * @param {Object} props - Властивості компонента.
+ * @param {number} props.wrongGuesses - Поточна кількість неправильних відповідей.
+ * @param {number} [props.maxAttempts=6] - Максимально можлива кількість спроб (впливає на те, які частини тіла будуть показані).
+ * * @example
+ * // Відобразить голову та тулуб (2 помилки)
+ * &lt;HangmanDrawing wrongGuesses={2} maxAttempts={6} />
+ */
+const HangmanDrawing = ({ wrongGuesses, maxAttempts = 6 }) => {
+    /**
+     * Масив частин тіла, представлених як SVG-елементи.
+     * Кожен елемент з'являється лише тоді, коли кількість помилок досягає відповідного порогу.
+     * @type {JSX.Element[]}
+     */
+    const parts = [
+        wrongGuesses >= 1 &amp;&amp; &lt;circle key="head" cx="140" cy="60" r="20" stroke="black" strokeWidth="3" fill="none" />,
+        wrongGuesses >= 2 &amp;&amp; &lt;line key="body" x1="140" y1="80" x2="140" y2="130" stroke="black" strokeWidth="3" />,
+        wrongGuesses >= 3 &amp;&amp; &lt;line key="left-arm" x1="140" y1="90" x2="110" y2="110" stroke="black" strokeWidth="3" />,
+        wrongGuesses >= 4 &amp;&amp; &lt;line key="right-arm" x1="140" y1="90" x2="170" y2="110" stroke="black" strokeWidth="3" />,
+        wrongGuesses >= 5 &amp;&amp; &lt;line key="left-leg" x1="140" y1="130" x2="110" y2="160" stroke="black" strokeWidth="3" />,
+        wrongGuesses >= 6 &amp;&amp; &lt;line key="right-leg" x1="140" y1="130" x2="170" y2="160" stroke="black" strokeWidth="3" />,
+        // Додаткові деталі для режимів з великою кількістю спроб
+        wrongGuesses >= 7 &amp;&amp; maxAttempts >= 7 &amp;&amp; &lt;circle key="eye1" cx="132" cy="55" r="3" stroke="black" strokeWidth="2" fill="black" />,
+        wrongGuesses >= 8 &amp;&amp; maxAttempts >= 8 &amp;&amp; &lt;circle key="eye2" cx="148" cy="55" r="3" stroke="black" strokeWidth="2" fill="black" />,
+        wrongGuesses >= 9 &amp;&amp; maxAttempts >= 9 &amp;&amp; &lt;path key="mouth" d="M 132 70 Q 140 75 148 70" stroke="black" strokeWidth="2" fill="none" />
+    ];
+
+    /** Відфільтрований список частин відповідно до ліміту спроб, встановленого користувачем */
+    const filteredParts = parts.slice(0, maxAttempts);
+
+    return (
+        &lt;div className="flex flex-col items-center my-6">
+            &lt;svg width="200" height="250" className="border-2 border-gray-300 rounded bg-gray-50">
+                {/* Статичні елементи конструкції (шибениця) */}
+                &lt;line x1="10" y1="230" x2="150" y2="230" stroke="black" strokeWidth="4"/>
+                &lt;line x1="80" y1="230" x2="80" y2="20" stroke="black" strokeWidth="4"/>
+                &lt;line x1="80" y1="20" x2="140" y2="20" stroke="black" strokeWidth="4"/>
+                &lt;line x1="140" y1="20" x2="140" y2="40" stroke="black" strokeWidth="4"/>
+
+                {/* Динамічні частини персонажа */}
+                {filteredParts}
+            &lt;/svg>
+
+            {/* Текстовий лічильник спроб */}
+            &lt;p className="text-gray-600 mt-3">
+                Спроби: {maxAttempts - wrongGuesses} / {maxAttempts}
+            &lt;/p>
+
+            {/* Додаткова інформація при нестандартних налаштуваннях */}
+            {maxAttempts !== 6 &amp;&amp; (
+                &lt;p className="text-xs text-gray-500 mt-1">
+                    (Налаштування: {maxAttempts} спроб)
+                &lt;/p>
+            )}
+        &lt;/div>
+    );
+};
+
+export default HangmanDrawing;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DEFAULT_SETTINGS">DEFAULT_SETTINGS</a></li><li><a href="global.html#GameOverModal">GameOverModal</a></li><li><a href="global.html#GamePage">GamePage</a></li><li><a href="global.html#HangmanDrawing">HangmanDrawing</a></li><li><a href="global.html#Keyboard">Keyboard</a></li><li><a href="global.html#ModalPortal">ModalPortal</a></li><li><a href="global.html#PAGES">PAGES</a></li><li><a href="global.html#ResultsPage">ResultsPage</a></li><li><a href="global.html#STORAGE_KEY">STORAGE_KEY</a></li><li><a href="global.html#SettingsPage">SettingsPage</a></li><li><a href="global.html#StartPage">StartPage</a></li><li><a href="global.html#UKRAINIAN_ALPHABET">UKRAINIAN_ALPHABET</a></li><li><a href="global.html#UserSelector">UserSelector</a></li><li><a href="global.html#WORD_CATEGORIES">WORD_CATEGORIES</a></li><li><a href="global.html#useGameScore">useGameScore</a></li><li><a href="global.html#useGameSettings">useGameSettings</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Mar 30 2026 14:26:37 GMT+0300 (Восточная Европа, летнее время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

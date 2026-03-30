@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/GamePage.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/GamePage.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { PAGES } from '../constants';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import PageWrapper from '../components/layout/PageWrapper';
+import HangmanDrawing from '../components/game/HangmanDrawing';
+import WordDisplay from '../components/game/WordDisplay';
+import Keyboard from '../components/game/Keyboard';
+import GameStats from '../components/game/GameStats';
+
+/**
+ * Головний ігровий екран "Шибениця".
+ * Керує відображенням процесу гри, візуалізацією шибениці, клавіатурою та станами перемоги/програшу.
+ * * @component
+ * @param {Object} props - Властивості компонента.
+ * @param {Function} props.onNavigate - Функція для перемикання між сторінками.
+ * @param {string} props.word - Секретне слово, яке потрібно вгадати.
+ * @param {string[]} props.guessedLetters - Масив літер, які вже вибрав гравець.
+ * @param {number} props.wrongGuesses - Кількість помилкових спроб.
+ * @param {Function} props.onLetterGuess - Функція, що викликається при натисканні на літеру.
+ * @param {number} props.score - Поточні бали гравця.
+ * @param {number} props.level - Поточний ігровий рівень.
+ * @param {boolean} props.isGameOver - Чи вичерпано ліміт спроб.
+ * @param {boolean} props.isWinner - Чи вгадано слово повністю.
+ * @param {number} [props.maxAttempts=6] - Максимально дозволена кількість помилок.
+ * @param {boolean} [props.showHints=false] - Чи дозволені автоматичні підказки.
+ * @param {boolean} [props.showFirstLetter=false] - Чи показувати першу літеру як бонус.
+ * @param {string} [props.userId] - ID користувача для статистики.
+ */
+const GamePage = ({
+                      onNavigate,
+                      word,
+                      guessedLetters,
+                      wrongGuesses,
+                      onLetterGuess,
+                      score,
+                      level,
+                      isGameOver,
+                      isWinner,
+                      maxAttempts = 6,
+                      showHints = false,
+                      showFirstLetter = false,
+                      allowSpecialCharacters = true,
+                      hasSpecialCharacters = false,
+                      userId
+                  }) => {
+
+    /** Прапорець, що блокує взаємодію з грою після завершення сесії */
+    const gameDisabled = isGameOver || isWinner;
+
+    /** Логіка відображення підказки після 3-х помилок */
+    const showHintAfterMistakes = showHints &amp;&amp; wrongGuesses >= 3 &amp;&amp; word &amp;&amp; !guessedLetters.includes(word[0]);
+
+    /** Логіка відображення першої літери, якщо це увімкнено в налаштуваннях */
+    const showFirstLetterHint = showFirstLetter &amp;&amp; word &amp;&amp; !guessedLetters.includes(word[0]);
+
+    /** Інформація про наявність апострофа у слові */
+    const showSpecialCharInfo = allowSpecialCharacters &amp;&amp; hasSpecialCharacters &amp;&amp; !guessedLetters.includes("'");
+
+    /**
+     * Рендерить блок з поточною конфігурацією гри.
+     * @returns {JSX.Element}
+     */
+    const renderSettingsInfo = () => (
+        &lt;div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl shadow-sm">
+            &lt;div className="flex justify-between items-center">
+                &lt;div>
+                    &lt;p className="text-sm font-medium text-blue-800">
+                        Поточні налаштування:
+                    &lt;/p>
+                    &lt;div className="flex flex-wrap gap-3 mt-2">
+                        &lt;span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                            {maxAttempts} спроб
+                        &lt;/span>
+                        {showHints &amp;&amp; (
+                            &lt;span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
+                                Підказки
+                            &lt;/span>
+                        )}
+                        {showFirstLetter &amp;&amp; (
+                            &lt;span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                                Перша літера
+                            &lt;/span>
+                        )}
+                    &lt;/div>
+                &lt;/div>
+                &lt;Button
+                    variant="secondary"
+                    onClick={() => onNavigate(PAGES.SETTINGS)}
+                    className="text-sm px-4 py-2"
+                >
+                    Змінити
+                &lt;/Button>
+            &lt;/div>
+        &lt;/div>
+    );
+
+    return (
+        &lt;PageWrapper>
+            &lt;Card>
+                {/* Header Section */}
+                &lt;div className="text-center mb-6">
+                    &lt;h1 className="text-4xl font-bold text-gray-800 mb-2">Шибениця&lt;/h1>
+                    &lt;p className="text-gray-600">Вгадайте українське слово&lt;/p>
+                    {userId &amp;&amp; userId !== 'default' &amp;&amp; (
+                        &lt;p className="text-sm text-blue-600 mt-1">Користувач: {userId}&lt;/p>
+                    )}
+                &lt;/div>
+
+                {renderSettingsInfo()}
+
+                &lt;GameStats score={score} level={level} />
+
+                {/* Візуалізація стану шибениці */}
+                &lt;HangmanDrawing wrongGuesses={wrongGuesses} maxAttempts={maxAttempts} />
+
+                {/* Hint System */}
+                {(showHintAfterMistakes || showFirstLetterHint || showSpecialCharInfo) &amp;&amp; (
+                    &lt;div className="space-y-3 mb-6">
+                        {showFirstLetterHint &amp;&amp; (
+                            &lt;div className="p-3 bg-green-50 border border-green-200 rounded-lg animate-pulse">
+                                &lt;p className="text-green-700 text-sm text-center">
+                                    Перша літера слова: &lt;span className="font-bold text-xl">{word[0]}&lt;/span>
+                                &lt;/p>
+                            &lt;/div>
+                        )}
+
+                        {showHintAfterMistakes &amp;&amp; !showFirstLetterHint &amp;&amp; (
+                            &lt;div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                &lt;p className="text-yellow-700 text-sm text-center">
+                                    Підказка: перша літера - &lt;span className="font-bold text-xl">{word[0]}&lt;/span>
+                                &lt;/p>
+                            &lt;/div>
+                        )}
+
+                        {showSpecialCharInfo &amp;&amp; (
+                            &lt;div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                                &lt;p className="text-purple-700 text-sm text-center">
+                                    Підказка: слово містить апостроф (')
+                                &lt;/p>
+                            &lt;/div>
+                        )}
+                    &lt;/div>
+                )}
+
+                {/* Word Display Section */}
+                &lt;WordDisplay
+                    word={word}
+                    guessedLetters={guessedLetters}
+                    allowSpecialCharacters={allowSpecialCharacters}
+                />
+
+                {/* Win/Loss Messages */}
+                {isWinner &amp;&amp; (
+                    &lt;div className="text-center my-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl shadow-sm">
+                        &lt;p className="text-2xl font-bold text-green-600 mb-2">Вітаємо!&lt;/p>
+                        &lt;p className="text-gray-700 mb-3">
+                            Ви вгадали слово: &lt;strong className="text-green-700 text-xl">{word}&lt;/strong>
+                        &lt;/p>
+                    &lt;/div>
+                )}
+
+                {isGameOver &amp;&amp; !isWinner &amp;&amp; (
+                    &lt;div className="text-center my-6 p-6 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-xl shadow-sm">
+                        &lt;p className="text-2xl font-bold text-red-600 mb-2">Гру завершено&lt;/p>
+                        &lt;p className="text-gray-700 mb-3">
+                            Слово було: &lt;strong className="text-red-700 text-xl">{word}&lt;/strong>
+                        &lt;/p>
+                    &lt;/div>
+                )}
+
+                {/* Interaction Section */}
+                &lt;div className="my-8">
+                    &lt;Keyboard
+                        onLetterClick={onLetterGuess}
+                        usedLetters={guessedLetters}
+                        disabled={gameDisabled}
+                    />
+                &lt;/div>
+
+                &lt;div className="flex flex-col sm:flex-row justify-center gap-3 mt-8">
+                    &lt;Button variant="secondary" onClick={() => onNavigate(PAGES.START)} className="px-6 py-3 flex-1">
+                        Головне меню
+                    &lt;/Button>
+
+                    &lt;Button variant="primary" onClick={() => onNavigate(PAGES.SETTINGS)} className="px-6 py-3 flex-1">
+                        Налаштування
+                    &lt;/Button>
+                &lt;/div>
+            &lt;/Card>
+        &lt;/PageWrapper>
+    );
+};
+
+export default GamePage;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DEFAULT_SETTINGS">DEFAULT_SETTINGS</a></li><li><a href="global.html#GameOverModal">GameOverModal</a></li><li><a href="global.html#GamePage">GamePage</a></li><li><a href="global.html#HangmanDrawing">HangmanDrawing</a></li><li><a href="global.html#Keyboard">Keyboard</a></li><li><a href="global.html#ModalPortal">ModalPortal</a></li><li><a href="global.html#PAGES">PAGES</a></li><li><a href="global.html#ResultsPage">ResultsPage</a></li><li><a href="global.html#STORAGE_KEY">STORAGE_KEY</a></li><li><a href="global.html#SettingsPage">SettingsPage</a></li><li><a href="global.html#StartPage">StartPage</a></li><li><a href="global.html#UKRAINIAN_ALPHABET">UKRAINIAN_ALPHABET</a></li><li><a href="global.html#UserSelector">UserSelector</a></li><li><a href="global.html#WORD_CATEGORIES">WORD_CATEGORIES</a></li><li><a href="global.html#useGameScore">useGameScore</a></li><li><a href="global.html#useGameSettings">useGameSettings</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Mar 30 2026 14:26:37 GMT+0300 (Восточная Европа, летнее время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

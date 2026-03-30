@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/ResultsPage.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/ResultsPage.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { PAGES } from '../constants';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import PageWrapper from '../components/layout/PageWrapper';
+
+/**
+ * Компонент сторінки результатів гри.
+ * Відображає фінальний статус (перемога/програш), набрані бали та кількість вгаданих слів.
+ * * @component
+ * @param {Object} props - Властивості компонента.
+ * @param {Function} props.onNavigate - Функція для переходу між сторінками додатку.
+ * @param {Object} props.gameResult - Об'єкт з даними завершеної ігрової сесії.
+ * @param {boolean} props.gameResult.isWinner - Чи закінчилася гра перемогою.
+ * @param {number} props.gameResult.finalScore - Кількість набраних балів за гру.
+ * @param {number} props.gameResult.words - Загальна кількість вгаданих слів.
+ * @param {Function} props.onPlayAgain - Функція для швидкого перезапуску гри з тими ж налаштуваннями.
+ * @param {string} [props.userId] - Ідентифікатор користувача для відображення персоналізованих результатів.
+ */
+const ResultsPage = ({ onNavigate, gameResult, onPlayAgain, userId }) => {
+    /** * Деструктуризація результатів гри з дефолтними значеннями
+     * для запобігання помилкам рендерингу, якщо дані не передані.
+     */
+    const { isWinner, finalScore, words } = gameResult || { isWinner: false, finalScore: 0, words: 0 };
+
+    return (
+        &lt;PageWrapper>
+            &lt;Card>
+                &lt;div className="text-center">
+                    {/* Відображення ID користувача, якщо він доступний */}
+                    {userId &amp;&amp; userId !== 'default' &amp;&amp; (
+                        &lt;p className="text-sm text-blue-600 mb-4">Користувач: {userId}&lt;/p>
+                    )}
+
+                    {/* Емодзі-статус залежно від результату гри */}
+                    &lt;div className="text-6xl mb-4">
+                        {isWinner ? '🎉' : '😕'}
+                    &lt;/div>
+
+                    &lt;h2 className="text-3xl font-bold mb-2">
+                        {isWinner ? 'Перемога!' : 'Гру завершено'}
+                    &lt;/h2>
+
+                    &lt;p className="text-gray-600 mb-8">
+                        {isWinner
+                            ? 'Вітаємо! Ви вгадали слово!'
+                            : 'Не засмучуйтесь, спробуйте ще раз!'}
+                    &lt;/p>
+
+                    {/* Статистичний блок */}
+                    &lt;div className="bg-gray-50 rounded-xl p-6 mb-8">
+                        &lt;div className="grid grid-cols-2 gap-4">
+                            &lt;div>
+                                &lt;p className="text-sm text-gray-500">Фінальний рахунок&lt;/p>
+                                &lt;p className="text-3xl font-bold text-blue-600">{finalScore}&lt;/p>
+                            &lt;/div>
+                            &lt;div>
+                                &lt;p className="text-sm text-gray-500">Вгадано слів&lt;/p>
+                                &lt;p className="text-3xl font-bold text-green-600">{words}&lt;/p>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+
+                    {/* Навігаційна панель */}
+                    &lt;div className="space-y-3">
+                        &lt;Button onClick={onPlayAgain} variant="success" className="w-full py-3">
+                            Грати знову
+                        &lt;/Button>
+                        &lt;div>
+                            &lt;Button onClick={() => onNavigate(PAGES.START)} variant="secondary" className="w-full py-3">
+                                На головну
+                            &lt;/Button>
+                        &lt;/div>
+                        &lt;div>
+                            &lt;Button onClick={() => onNavigate(PAGES.SETTINGS)} variant="outline" className="w-full py-3 border-gray-300">
+                                Налаштування
+                            &lt;/Button>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/Card>
+        &lt;/PageWrapper>
+    );
+};
+
+export default ResultsPage;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DEFAULT_SETTINGS">DEFAULT_SETTINGS</a></li><li><a href="global.html#GameOverModal">GameOverModal</a></li><li><a href="global.html#GamePage">GamePage</a></li><li><a href="global.html#HangmanDrawing">HangmanDrawing</a></li><li><a href="global.html#Keyboard">Keyboard</a></li><li><a href="global.html#ModalPortal">ModalPortal</a></li><li><a href="global.html#PAGES">PAGES</a></li><li><a href="global.html#ResultsPage">ResultsPage</a></li><li><a href="global.html#STORAGE_KEY">STORAGE_KEY</a></li><li><a href="global.html#SettingsPage">SettingsPage</a></li><li><a href="global.html#StartPage">StartPage</a></li><li><a href="global.html#UKRAINIAN_ALPHABET">UKRAINIAN_ALPHABET</a></li><li><a href="global.html#UserSelector">UserSelector</a></li><li><a href="global.html#WORD_CATEGORIES">WORD_CATEGORIES</a></li><li><a href="global.html#useGameScore">useGameScore</a></li><li><a href="global.html#useGameSettings">useGameSettings</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Mar 30 2026 14:26:37 GMT+0300 (Восточная Европа, летнее время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

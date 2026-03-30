@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: hooks/useGameSettings.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: hooks/useGameSettings.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState, useEffect, useCallback } from 'react';
+
+/**
+ * Стандартні налаштування гри за замовчуванням.
+ * @constant
+ * @type {Object}
+ * @property {string} difficulty - Рівень складності ('easy', 'medium', 'hard').
+ * @property {number} maxAttempts - Ліміт помилок до програшу.
+ * @property {boolean} showHints - Дозвіл на показ підказок під час гри.
+ * @property {boolean} showFirstLetter - Чи відкривати першу літеру слова на старті.
+ * @property {boolean} allowSpecialCharacters - Підтримка апострофів та спецсимволів.
+ */
+export const DEFAULT_SETTINGS = {
+    difficulty: 'medium',
+    maxAttempts: 6,
+    showHints: false,
+    showFirstLetter: false,
+    allowSpecialCharacters: true,
+};
+
+/** Ключ для збереження конфігурації у локальному сховищі браузера */
+const STORAGE_KEY = 'hangman_settings_v2';
+
+/**
+ * Кастомний хук для управління налаштуваннями гри та їх синхронізації з LocalStorage.
+ * * @function useGameSettings
+ * @returns {Object} Об'єкт доступу до налаштувань та методів їх оновлення.
+ * @property {Object} settings - Поточний об'єкт конфігурації.
+ * @property {boolean} isLoading - Статус первинного завантаження даних зі сховища.
+ * @property {Function} saveSettings - Метод для повного перезапису налаштувань.
+ * @property {Function} resetSettings - Скидання до заводських налаштувань.
+ * @property {Function} updateSetting - Оновлення конкретного поля конфігурації.
+ */
+export const useGameSettings = () => {
+    const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+    const [isLoading, setIsLoading] = useState(true);
+
+    /**
+     * Ефект для завантаження збережених налаштувань при ініціалізації додатку.
+     * Використовує блок try-catch для безпечного парсингу JSON.
+     */
+    useEffect(() => {
+        const loadSettings = () => {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // Об'єднуємо дефолтні налаштування з новими для підтримки зворотної сумісності
+                    setSettings({ ...DEFAULT_SETTINGS, ...parsed });
+                }
+            } catch (error) {
+                console.error('Помилка завантаження налаштувань:', error);
+                localStorage.removeItem(STORAGE_KEY);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadSettings();
+    }, []);
+
+    /**
+     * Зберігає повний об'єкт налаштувань у LocalStorage.
+     * @param {Object} newSettings - Новий об'єкт конфігурації.
+     * @returns {boolean} Результат операції (успішно/помилка).
+     */
+    const saveSettings = useCallback((newSettings) => {
+        try {
+            const settingsToSave = { ...newSettings };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(settingsToSave));
+            setSettings(settingsToSave);
+            return true;
+        } catch (error) {
+            console.error('Помилка збереження налаштувань:', error);
+            return false;
+        }
+    }, []);
+
+    /** Очищує сховище та повертає стандартні значення (reset to factory) */
+    const resetSettings = useCallback(() => {
+        localStorage.removeItem(STORAGE_KEY);
+        setSettings(DEFAULT_SETTINGS);
+    }, []);
+
+    /**
+     * Оновлює лише одну конкретну властивість у налаштуваннях.
+     * @param {string} key - Назва ключа (напр. 'difficulty').
+     * @param {any} value - Нове значення.
+     */
+    const updateSetting = useCallback((key, value) => {
+        setSettings(prev => {
+            const newSettings = { ...prev, [key]: value };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
+            return newSettings;
+        });
+    }, []);
+
+    return {
+        settings,
+        isLoading,
+        saveSettings,
+        resetSettings,
+        updateSetting,
+    };
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DEFAULT_SETTINGS">DEFAULT_SETTINGS</a></li><li><a href="global.html#GameOverModal">GameOverModal</a></li><li><a href="global.html#GamePage">GamePage</a></li><li><a href="global.html#HangmanDrawing">HangmanDrawing</a></li><li><a href="global.html#Keyboard">Keyboard</a></li><li><a href="global.html#ModalPortal">ModalPortal</a></li><li><a href="global.html#PAGES">PAGES</a></li><li><a href="global.html#ResultsPage">ResultsPage</a></li><li><a href="global.html#STORAGE_KEY">STORAGE_KEY</a></li><li><a href="global.html#SettingsPage">SettingsPage</a></li><li><a href="global.html#StartPage">StartPage</a></li><li><a href="global.html#UKRAINIAN_ALPHABET">UKRAINIAN_ALPHABET</a></li><li><a href="global.html#UserSelector">UserSelector</a></li><li><a href="global.html#WORD_CATEGORIES">WORD_CATEGORIES</a></li><li><a href="global.html#useGameScore">useGameScore</a></li><li><a href="global.html#useGameSettings">useGameSettings</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Mar 30 2026 14:26:37 GMT+0300 (Восточная Европа, летнее время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

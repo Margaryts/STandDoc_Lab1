@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/StartPage.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/StartPage.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import PageWrapper from '../components/layout/PageWrapper';
+
+/**
+ * Компонент стартової сторінки гри "Шибениця".
+ * Відображає головне меню, вибір складності та ідентифікатор користувача.
+ * * @component
+ * @param {Object} props - Властивості компонента.
+ * @param {Function} props.onNavigate - Функція для перемикання між екранами гри (напр. 'GAME', 'SETTINGS').
+ * @param {'easy' | 'medium' | 'hard'} props.difficulty - Поточний обраний рівень складності.
+ * @param {Function} props.onDifficultyChange - Колбек-функція, що викликається при зміні складності.
+ * @param {string} [props.userId] - Унікальний ідентифікатор користувача для відображення у профілі.
+ */
+const StartPage = ({ onNavigate, difficulty, onDifficultyChange, userId }) => (
+    &lt;PageWrapper>
+        &lt;Card>
+            &lt;div className="text-center">
+                &lt;h1 className="text-5xl font-bold text-gray-800 mb-2">Шибениця&lt;/h1>
+                &lt;p className="text-gray-600 mb-2">Вгадай українське слово!&lt;/p>
+
+                {/* Відображення ID користувача, якщо він авторизований */}
+                {userId &amp;&amp; userId !== 'default' &amp;&amp; (
+                    &lt;p className="text-sm text-blue-600 mb-6">Користувач: {userId}&lt;/p>
+                )}
+
+                {/* Секція вибору складності */}
+                &lt;div className="mb-10">
+                    &lt;p className="text-sm text-gray-500 mb-4">ОБЕРІТЬ СКЛАДНІСТЬ:&lt;/p>
+                    &lt;div className="flex gap-3 justify-center">
+                        {[
+                            { value: 'easy', label: 'Легко', desc: 'Короткі слова', color: 'green' },
+                            { value: 'medium', label: 'Середньо', desc: 'Середні слова', color: 'blue' },
+                            { value: 'hard', label: 'Важко', desc: 'Довгі слова', color: 'red' }
+                        ].map(({ value, label, desc, color }) => (
+                            &lt;button
+                                key={value}
+                                onClick={() => onDifficultyChange(value)}
+                                className={`px-6 py-3 rounded-lg font-semibold transition-all transform hover:scale-105 ${
+                                    difficulty === value
+                                        ? `bg-${color}-600 text-white shadow-lg`
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                }`}
+                                title={desc}
+                            >
+                                {label}
+                            &lt;/button>
+                        ))}
+                    &lt;/div>
+                    &lt;p className="text-xs text-gray-500 mt-2">
+                        Поточна складність: &lt;span className="font-semibold">
+                        {difficulty === 'easy' ? 'Легко' : difficulty === 'medium' ? 'Середньо' : 'Важко'}
+                        &lt;/span>
+                    &lt;/p>
+                &lt;/div>
+
+                {/* Основна навігація гри */}
+                &lt;div className="space-y-4 max-w-xs mx-auto">
+                    &lt;Button
+                        onClick={() => onNavigate('GAME')}
+                        variant="primary"
+                        className="w-full py-4 text-lg"
+                    >
+                        Почати гру
+                    &lt;/Button>
+
+                    &lt;Button
+                        onClick={() => onNavigate('SETTINGS')}
+                        variant="secondary"
+                        className="w-full py-4 text-lg"
+                    >
+                        Налаштування
+                    &lt;/Button>
+
+                    &lt;Button
+                        onClick={() => onNavigate('RESULTS_TABLE')}
+                        variant="outline"
+                        className="w-full py-4 text-lg border-gray-300"
+                    >
+                        Таблиця результатів
+                    &lt;/Button>
+                &lt;/div>
+
+            &lt;/div>
+        &lt;/Card>
+    &lt;/PageWrapper>
+);
+
+export default StartPage;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DEFAULT_SETTINGS">DEFAULT_SETTINGS</a></li><li><a href="global.html#GameOverModal">GameOverModal</a></li><li><a href="global.html#GamePage">GamePage</a></li><li><a href="global.html#HangmanDrawing">HangmanDrawing</a></li><li><a href="global.html#Keyboard">Keyboard</a></li><li><a href="global.html#ModalPortal">ModalPortal</a></li><li><a href="global.html#PAGES">PAGES</a></li><li><a href="global.html#ResultsPage">ResultsPage</a></li><li><a href="global.html#STORAGE_KEY">STORAGE_KEY</a></li><li><a href="global.html#SettingsPage">SettingsPage</a></li><li><a href="global.html#StartPage">StartPage</a></li><li><a href="global.html#UKRAINIAN_ALPHABET">UKRAINIAN_ALPHABET</a></li><li><a href="global.html#UserSelector">UserSelector</a></li><li><a href="global.html#WORD_CATEGORIES">WORD_CATEGORIES</a></li><li><a href="global.html#useGameScore">useGameScore</a></li><li><a href="global.html#useGameSettings">useGameSettings</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Mar 30 2026 14:26:37 GMT+0300 (Восточная Европа, летнее время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
