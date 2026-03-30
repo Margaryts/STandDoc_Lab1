@@ -51,7 +51,7 @@
 -  Storybook з демонстрацією 2+ компонентів та 2–3 варіаціями для кожного
 -  Cookie popup згідно з GDPR
 -  Документація коду за допомогою **JSdoc**
--  Відео демонстрації локальної системи документації (`docs/video_demo.mp4`)
+-  Відео демонстрації локальної системи документації [ВІДЕО](https://drive.google.com/file/d/1jAey5Oc_RpHEBkQuvVqM_nfnqyHUNLHp/view?usp=sharing)
 
 ---
 
